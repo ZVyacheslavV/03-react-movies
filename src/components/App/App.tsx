@@ -98,7 +98,11 @@ export default function App() {
       <SearchBar onSubmit={handleSearch} />
       {movies.length > 0 && <MovieGrid movies={movies} onSelect={openModal} />}
       {isLoading && <Loader />}
-      {isMorePages && <LoadMore handleClick={handleLoadMoreClick} />}
+      {
+        /* isMorePages && */ movies.length === currentPage * 20 && (
+          <LoadMore handleClick={handleLoadMoreClick} />
+        )
+      }
       {isError && <ErrorMessage />}
       {selectedMovie && (
         <MovieModal onClose={closeModal} movie={selectedMovie} />

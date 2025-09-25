@@ -9,7 +9,14 @@ interface MovieModalProps {
 }
 
 const MovieModal = ({
-  movie: { title, overview, release_date, vote_average, backdrop_path },
+  movie: {
+    title,
+    overview,
+    release_date,
+    vote_average,
+    backdrop_path,
+    poster_path,
+  },
   onClose,
 }: MovieModalProps) => {
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -46,11 +53,9 @@ const MovieModal = ({
           &times;
         </button>
         <img
-          src={
-            backdrop_path
-              ? `https://image.tmdb.org/t/p/w500${backdrop_path}`
-              : undefined
-          }
+          src={`https://image.tmdb.org/t/p/w500${
+            backdrop_path ? backdrop_path : poster_path
+          }`}
           alt={title}
           className={css.image}
         />

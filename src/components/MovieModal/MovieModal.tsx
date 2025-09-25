@@ -1,16 +1,7 @@
-/* export interface Movie {
-  id: number;
-  poster_path: string;
-  backdrop_path: string;
-  title: string;
-  overview: string;
-  release_date: string;
-  vote_average: number;
-} */
-
 import { createPortal } from 'react-dom';
 import css from './MovieModal.module.css';
 import type { Movie } from '../../types/movie';
+import { useEffect } from 'react';
 
 interface MovieModalProps {
   movie: Movie;
@@ -24,6 +15,17 @@ const MovieModal = ({
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) onClose();
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
 
   return createPortal(
     <div

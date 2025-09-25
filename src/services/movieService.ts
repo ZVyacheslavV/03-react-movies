@@ -15,15 +15,28 @@ axios.defaults.baseURL = BASE_URL;
 
 interface MoviesHttpResponse {
   results: Movie[];
+  total_pages: number;
+  total_results: number;
+  page: number;
 }
 
-export const fetchMovies = async (query: string): Promise<Movie[]> => {
+interface MoviesResponse {
+  results: Movie[];
+  total_pages: number;
+  total_results: number;
+  pageData: number;
+}
+
+export const fetchMovies = async (
+  query: string,
+  page: number = 1
+): Promise<MoviesResponse> => {
   const options = {
     params: {
       query,
       include_adult: false,
       language: 'en-US',
-      page: 1,
+      page,
     },
     headers: {
       accept: 'application/json',
@@ -32,8 +45,8 @@ export const fetchMovies = async (query: string): Promise<Movie[]> => {
   };
 
   const {
-    data: { results },
+    data: { results, total_pages, total_results, page: pageData },
   } = await axios.get<MoviesHttpResponse>(API_ENDPOINTS.SEARCH, options);
 
-  return results;
+  return { results, total_pages, total_results, pageData };
 };

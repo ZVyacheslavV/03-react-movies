@@ -7,45 +7,55 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import MovieGrid from '../MovieGrid/MovieGrid';
 import { Toaster } from 'react-hot-toast';
 import { notifyEmpty } from '../../services/notifications';
+import MovieModal from '../MovieModal/MovieModal';
 
 export default function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+
+  const openModal = (movie: Movie) => {
+    setIsModalOpen(true);
+    setSelectedMovie(movie);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedMovie(null);
+  };
+
   const handleSearch = async (topic: string) => {
     try {
       setIsLoading(true);
       setIsError(false);
+      setMovies([]);
 
       const data = await fetchMovies(topic);
-      if (data.length === 0) notifyEmpty();
 
-      setMovies(data);
+      if (data.length === 0) {
+        notifyEmpty();
+        setMovies([]);
+      } else setMovies(data);
     } catch {
       setIsError(true);
+      setMovies([]);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
-  /*   const [clicks, setClicks] = useState(0);
-
-  useEffect(() => {
-    console.log('You can see me only once!');
-
-    const handleSearch = async () => console.log(await fetchMovies('dog'));
-    handleSearch();
-  }, [clicks]); */
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={true} />
       <SearchBar onSubmit={handleSearch} />
-      {/* movies.length > 0 && */ <MovieGrid />}
+      {movies.length > 0 && <MovieGrid movies={movies} onSelect={openModal} />}
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
+      {isModalOpen && selectedMovie && (
+        <MovieModal onClose={closeModal} movie={selectedMovie} />
+      )}
+      <Toaster position="top-center" reverseOrder={true} />
     </>
   );
-  /*     <button onClick={() => setClicks(clicks + 1)}>
-      You clicked {clicks} times
-    </button> */
 }

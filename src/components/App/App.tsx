@@ -14,15 +14,15 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  /* const [isModalOpen, setIsModalOpen] = useState(false); */
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
   const openModal = (movie: Movie) => {
-    setIsModalOpen(true);
+    /* setIsModalOpen(true); */
     setSelectedMovie(movie);
   };
   const closeModal = () => {
-    setIsModalOpen(false);
+    /* setIsModalOpen(false); */
     setSelectedMovie(null);
   };
 
@@ -52,9 +52,11 @@ export default function App() {
       {movies.length > 0 && <MovieGrid movies={movies} onSelect={openModal} />}
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
-      {isModalOpen && selectedMovie && (
-        <MovieModal onClose={closeModal} movie={selectedMovie} />
-      )}
+      {
+        /* isModalOpen &&  */ selectedMovie && (
+          <MovieModal onClose={closeModal} movie={selectedMovie} />
+        )
+      }
       <Toaster position="top-center" reverseOrder={true} />
     </>
   );
